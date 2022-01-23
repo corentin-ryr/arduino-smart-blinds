@@ -1,26 +1,25 @@
-/*********
-  Rui Santos
-  Complete project details at http://randomnerdtutorials.com
-*********/
-
 // Import required libraries
 #ifdef ESP32
-#include <WiFi.h>
-#include <AsyncTCP.h>
+  #include <WiFi.h>
+
 #else
-#include <ESP8266WiFi.h>
-//  #include <ESPAsyncTCP.h>
+  #include <ESP8266WiFi.h>
+  #include <ESP8266WebServer.h>
+
 #endif
-//#include <ESPAsyncWebServer.h>
 
 #include "WiFiTerm.h"
+#include <FS.h>
+
 
 // Replace with your network credentials
 const char* ssid = "TP-Link_1C96";
 const char* password = "10502167";
 
 // Set web server port number to 80
-ESP8266WebServer server(80);
+ESP8266WebServer server;
+ESP8266WebServer serverStatic(82);
+
 
 String buttonNames[] = {"cuisine", "salon"};
 bool buttonStates[] = {true, false};
@@ -49,6 +48,15 @@ void setup() {
   term.begin(server);
   term.link(Serial);
   Serial.println("term started");
+
+
+  //For the static server
+  if(!SPIFFS.begin()){
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+  serverStatic.serveStatic("/", SPIFFS, "/");    
+  serverStatic.begin();
 }
 
 
@@ -75,6 +83,9 @@ void loop() {
       term.println("2 ok");
     }
   }
+
+  //For the static server
+  serverStatic.handleClient();
 
 
 }
@@ -119,7 +130,6 @@ void setBtnState(String message) {
   }
 
   //Set the button state with its name
-  Serial.println(" ");
   for (byte i = 0; i < (sizeof(buttonNames) / sizeof(buttonNames[0])); i++) {
     // do something with myValues[i]
     if (buttonNames[i] == btnName) { 
