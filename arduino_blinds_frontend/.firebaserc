@@ -1,0 +1,5 @@
+{
+  "projects": {
+    "default": "arduino-blinds-frontend"
+  }
+}
