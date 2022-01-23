@@ -1,25 +1,26 @@
 // Import required libraries
 #ifdef ESP32
   #include <WiFi.h>
+  #include <WebServer.h>
+  #include <SPIFFS.h>
+  
 
 #else
   #include <ESP8266WiFi.h>
   #include <ESP8266WebServer.h>
-
+  // Set web server port number to 80
+  #define WebServer ESP8266WebServer
 #endif
 
-#include "WiFiTerm.h"
-#include <FS.h>
 
+#include "WiFiTerm.h"
 
 // Replace with your network credentials
 const char* ssid = "TP-Link_1C96";
 const char* password = "10502167";
 
-// Set web server port number to 80
-ESP8266WebServer server;
-ESP8266WebServer serverStatic(82);
-
+WebServer server;
+WebServer serverStatic(82); 
 
 String buttonNames[] = {"cuisine", "salon"};
 bool buttonStates[] = {true, false};

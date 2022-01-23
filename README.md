@@ -1,4 +1,4 @@
-# arduino-smart-blinds
+# Arduino Smart Blinds
 
 ## Frontend web application to control an arduino
 
